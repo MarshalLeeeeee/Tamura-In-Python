@@ -7,7 +7,7 @@ def coarseness(image, kmax):
 	h = image.shape[1]
 	kmax = kmax if (np.power(2,kmax) < w) else int(np.log(w) / np.log(2))
 	kmax = kmax if (np.power(2,kmax) < h) else int(np.log(h) / np.log(2))
-	average_gray = np.zeros([w,h,kmax])
+	average_gray = np.zeros([kmax,w,h])
 	horizon = np.zeros([kmax,w,h])
 	vertical = np.zeros([kmax,w,h])
 	Sbest = np.zeros([w,h])
