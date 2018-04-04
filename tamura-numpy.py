@@ -34,7 +34,7 @@ def coarseness(image, kmax):
 			Sbest[wi][hi] = np.power(2,index)
 
 	fcrs = np.mean(Sbest)
-	return frcs
+	return fcrs
 
 
 def contrast(image):
@@ -48,7 +48,7 @@ def contrast(image):
 	return fcon
 
 def directionality(image):
-	image = np.array(image)
+	image = np.array(image, dtype = 'int64')
 	h = image.shape[0]
 	w = image.shape[1]
 	convH = np.array([[-1,0,1],[-1,0,1],[-1,0,1]])
@@ -90,8 +90,8 @@ def directionality(image):
 			elif(deltaH[hi][wi] == 0):
 				theta[hi][wi] = np.pi
 			else:
-				theta[hi][wi] = np.arctan(deltaV[hi][wi] / deltaH[hi[wi]]) + np.pi / 2.0
-	theta_vec = np.reshpae(theta, (theta.shape[0] * theta.shape[1]))
+				theta[hi][wi] = np.arctan(deltaV[hi][wi] / deltaH[hi][wi]) + np.pi / 2.0
+	theta_vec = np.reshape(theta, (theta.shape[0] * theta.shape[1]))
 
 	n = 16
 	t = 12
@@ -100,7 +100,7 @@ def directionality(image):
 	dlen = deltaG_vec.shape[0]
 	for ni in range(n):
 		for k in range(dlen):
-			if((deltaG_vec[k] >= t) and (theta_vec[k] >= np.power(2,ni) * np.pi / (2 * n)) and (theta_vec[k] < (np.power(2,ni) + 1) * np.pi / (2 * n))):
+			if((deltaG_vec[k] >= t) and (theta_vec[k] >= (2*ni-1) * np.pi / (2 * n)) and (theta_vec[k] < (2*ni+1) * np.pi / (2 * n))):
 				hd[ni] += 1
 	hd = hd / np.mean(hd)
 	hd_max_index = np.argmax(hd)
@@ -119,28 +119,23 @@ def roughness(fcrs, fcon):
 	return fcrs + fcon
 
 if __name__ == '__main__':
-	'''
-	img = cv2.imread('rain_princess.jpg',cv2.IMREAD_GRAYSCALE)
+	
+
+	
+	img = cv2.imread('stata.jpg',cv2.IMREAD_GRAYSCALE)
+	print(img.shape)
 	fcrs = coarseness(img, 5)
+	print("coarseness: %f" % fcrs);
 	fcon = contrast(img)
-	fdir, sita = directionality(img)
-	flin = linelikeness(img,sita,4)
-	freg = regularity(img,64)
-	frgh = roughness(fcrs, fcon)
-	printf("coarseness: %d" % fcrs);
-	printf("contrast: %d" % fcon)
-	printf("directionality: %d" % fdir)
-	printf("linelikeness: %d" % flin)
-	printf("regularity: %d" % freg)
-	printf("roughness: %d" % frgh)
-	'''
-	a = np.array([[1,2],[3,4]])
-	b = a - np.mean(a)
-	c = np.eye(2)
-	d = np.reshape(a, (4))
-	print(b)
-	print(a * c)
-	print(np.multiply(a, c))
-	print(np.dot(a, c))
-	print(d)
-	print(d.shape[0])
+	print("contrast: %f" % fcon)
+	fdir= directionality(img)
+	print("directionality: %f" % fdir)
+
+	#flin = linelikeness(img,sita,4)
+	#freg = regularity(img,64)
+	#frgh = roughness(fcrs, fcon)
+	#printf("linelikeness: %d" % flin)
+	#printf("regularity: %d" % freg)
+	#printf("roughness: %d" % frgh)
+	
+	
