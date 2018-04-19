@@ -4,8 +4,9 @@ import cv2
 
 def coarseness(image):
 	kmax = tf.constant(5)
-	image = tf.reduce_mean(image,axis=3)
-	image = tf.expand_dims(image,-1)
+	#image = tf.reduce_mean(image,axis=3)
+	#image = tf.expand_dims(image,-1)
+	image = tf.image.rgb_to_grayscale(image)
 
 	window1 = np.power(2,1)
 	kernel1 = tf.ones([window1,window1,1,1])
@@ -92,8 +93,11 @@ def coarseness(image):
 	return frcs
 
 def contrast(image):
-	image = tf.reshape(tf.reduce_mean(image,axis=3),[-1])
+	image = tf.image.rgb_to_grayscale(image)
+	#image = tf.reshape(tf.reduce_mean(image,axis=3),[-1])
+	image = tf.reshape(image,[-1])
 	mean = tf.reduce_mean(image)
+	#return mean
 	m4 = tf.reduce_mean(tf.pow(tf.subtract(image, mean),4))
 	var = tf.reduce_mean(tf.square(image-mean))
 	std = tf.pow(var,0.5)
@@ -102,7 +106,8 @@ def contrast(image):
 	return fcon
 
 def directionality(image):
-	image = tf.expand_dims(tf.reduce_mean(image,axis=3),3)
+	#image = tf.expand_dims(tf.reduce_mean(image,axis=3),3)
+	image = tf.image.rgb_to_grayscale(image)
 	kernel_h = tf.expand_dims(tf.expand_dims(tf.constant([[-1,0,1],[-1,0,1],[-1,0,1]], dtype='float32'),2),3)
 	kernel_v = tf.expand_dims(tf.expand_dims(tf.constant([[1,1,1],[0,0,0],[-1,-1,-1]], dtype='float32'),2),3)
 
@@ -149,7 +154,9 @@ def directionality(image):
 
 
 if __name__ == '__main__':
-	img = np.array(cv2.imread('stata.jpg'))[np.newaxis, ]
+	img = np.array(cv2.imread('wave.jpg'))[np.newaxis, ]
+	#img = np.array(cv2.imread('wave.jpg', cv2.IMREAD_GRAYSCALE))[np.newaxis, ]
+	#img = img[:, :, :, np.newaxis]
 	with tf.Session() as sess:
 		style_image = tf.placeholder(tf.float32, shape=img.shape, name='style_image')
 		frcs = coarseness(style_image)
