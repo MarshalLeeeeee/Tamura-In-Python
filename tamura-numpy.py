@@ -122,7 +122,7 @@ if __name__ == '__main__':
 	
 
 	
-	img = cv2.imread('stata.jpg',cv2.IMREAD_GRAYSCALE)
+	img = cv2.imread('wave.jpg',cv2.IMREAD_GRAYSCALE)
 	print(img.shape)
 	fcrs = coarseness(img, 5)
 	print("coarseness: %f" % fcrs);
