@@ -121,7 +121,6 @@ def roughness(fcrs, fcon):
 if __name__ == '__main__':
 	
 
-	
 	img = cv2.imread('wave.jpg',cv2.IMREAD_GRAYSCALE)
 	print(img.shape)
 	fcrs = coarseness(img, 5)
